@@ -1,6 +1,8 @@
 import os
 
 from pyhocon import ConfigFactory, HOCONConverter, ConfigTree
+
+from bluemap_helper.marker import MarkerSet
 from bluemap_helper.poi_utils import *
 from xpinyin import Pinyin
 from minecraft_data_api import get_player_dimension
@@ -24,12 +26,22 @@ def write_config(config, config_file):
 
 
 def insert_mark(area, marker_set, marker_config):
-    path = os.path.join("server\\config\\bluemap\\maps", area + ".conf")
+    path = os.path.join("server/config/bluemap/maps", area + ".conf")
     config = read_config(path)
     if marker_set not in config["marker-sets"]:
         config["marker-sets"].put(gen_id(marker_set), get_marker_set(marker_set))
     config["marker-sets"][marker_set]["markers"].put(gen_id(marker_config["label"]), marker_config)
     write_config(config, path)
+
+
+def get_marker_list(area):
+    set_list: list[MarkerSet] = []
+    path = os.path.join("server/config/bluemap/maps", area + ".conf")
+    config = read_config(path)
+    sets: ConfigTree = config["marker-sets"]
+    for i in sets:
+        set_list.append(MarkerSet(i, sets.get(i)))
+    return set_list
 
 
 def gen_id(name):
