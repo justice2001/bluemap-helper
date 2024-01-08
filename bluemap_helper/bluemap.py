@@ -3,6 +3,13 @@ import os
 from pyhocon import ConfigFactory, HOCONConverter, ConfigTree
 from bluemap_helper.poi_utils import *
 from xpinyin import Pinyin
+from minecraft_data_api import get_player_dimension
+
+DIMENSIONS = {
+    0: "overworld",
+    1: "end",
+    -1: "nether"
+}
 
 
 def read_config(config_file):
@@ -12,7 +19,7 @@ def read_config(config_file):
 
 def write_config(config, config_file):
     config = HOCONConverter.convert(config, "hocon")
-    with open(config_file, "w+") as file:
+    with open(config_file, "w+", encoding="utf-8") as file:
         file.write(config)
 
 
@@ -28,3 +35,8 @@ def insert_mark(area, marker_set, marker_config):
 def gen_id(name):
     p = Pinyin()
     return p.get_pinyin(name).replace(" ", "-").lower()
+
+
+def get_bluemap_dimensions(player):
+    dimension = get_player_dimension(player)
+    return DIMENSIONS[dimension]

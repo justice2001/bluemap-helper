@@ -18,7 +18,7 @@ def get_marker_set(set_name):
     co.put("toggleable", True)
     co.put("default-hidden", False)
     co.put("sorting", 0)
-    co.put("markers", {})
+    co.put("markers", ConfigTree())
     return co
 
 
@@ -48,7 +48,7 @@ def get_poi_marker(poi_name, position, config):
     co.put("type", "poi")
     co.put("position", position)
     co.put("label", poi_name)
-    co.put("detail", "This is a poi generated in mcdr plgin")
+    co.put("detail", poi_name)
     co.put("icon", "assets/poi.svg")
     co.put("anchor", get_position(25, 45))
     co.put("min-distance", 10)
@@ -61,3 +61,4 @@ def get_position(x=None, y=None, z=None):
     x and co.put("x", x)
     y and co.put("y", y)
     z and co.put("z", z)
+    return co
