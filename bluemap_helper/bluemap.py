@@ -26,7 +26,7 @@ def write_config(config, config_file):
 
 
 def insert_mark(area, marker_set, marker_config):
-    path = os.path.join("server/config/bluemap/maps", area + ".conf")
+    path = get_path(area)
     config = read_config(path)
     if marker_set not in config["marker-sets"]:
         config["marker-sets"].put(gen_id(marker_set), get_marker_set(marker_set))
@@ -34,9 +34,18 @@ def insert_mark(area, marker_set, marker_config):
     write_config(config, path)
 
 
+def del_mark(area, marker_set, marker_id):
+    path = get_path(area)
+    config = read_config(path)
+    if marker_set not in config["marker-sets"]:
+        return
+    sets: ConfigTree = config["marker-sets"][marker_set]["markers"]
+    sets.pop(marker_id)
+    write_config(config, path)
+
 def get_marker_list(area):
     set_list: list[MarkerSet] = []
-    path = os.path.join("server/config/bluemap/maps", area + ".conf")
+    path = get_path(area)
     config = read_config(path)
     sets: ConfigTree = config["marker-sets"]
     for i in sets:
@@ -47,6 +56,10 @@ def get_marker_list(area):
 def gen_id(name):
     p = Pinyin()
     return p.get_pinyin(name).replace(" ", "-").lower()
+
+
+def get_path(area):
+    return os.path.join("server/config/bluemap/maps", area + ".conf")
 
 
 def get_bluemap_dimensions(player):

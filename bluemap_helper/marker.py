@@ -52,6 +52,7 @@ class MarkerSet:
     markers: list[Marker] = []
 
     def __init__(self, config_id=None, config: ConfigTree = None):
+        self.markers = []
         if config_id and config:
             self.id = config_id
             self.label = config.get("label")

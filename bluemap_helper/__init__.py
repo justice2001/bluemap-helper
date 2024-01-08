@@ -11,7 +11,7 @@ from mcdreforged.minecraft.rtext.text import RText, RTextList
 from mcdreforged.plugin.server_interface import PluginServerInterface
 from minecraft_data_api import get_player_info, get_player_dimension, get_server_player_list
 
-from bluemap_helper.bluemap import read_config, insert_mark, get_bluemap_dimensions, get_marker_list
+from bluemap_helper.bluemap import read_config, insert_mark, get_bluemap_dimensions, get_marker_list, del_mark
 from bluemap_helper.poi_utils import get_poi_marker, get_position
 from bluemap_helper.utils import named_thread
 
@@ -22,6 +22,16 @@ def on_load(server: PluginServerInterface, prev_module):
             Literal("make").then(
                 Literal("poi").then(
                     QuotableText("comment").runs(make_poi)
+                )
+            )
+        ).then(
+            Literal("del").then(
+                QuotableText("marker").runs(remove_marker)
+                .then(
+                    QuotableText("set").runs(remove_marker)
+                    .then(
+                        QuotableText("dimension").runs(remove_marker)
+                    )
                 )
             )
         ).then(
@@ -49,6 +59,17 @@ def make_poi(source: PlayerCommandSource, context: CommandContext):
         source.reply("POI添加成功")
     except FileNotFoundError:
         source.reply("Invalid World: " + context["comment"])
+
+
+@named_thread
+def remove_marker(source: PlayerCommandSource, context: CommandContext):
+    if not source.is_player:
+        marker_dimension = context.get("dimension", "overworld")
+    else:
+        marker_dimension = get_bluemap_dimensions(source.player)
+    marker_set = context.get("set", "default")
+    marker = context.get("marker")
+    del_mark(marker_dimension, marker_set, marker)
 
 
 @named_thread
