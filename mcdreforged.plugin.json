@@ -1,8 +1,8 @@
 {
     "id": "bluemap_helper",
     "version": "1.0.0",
-    "name": "Example Plugin",
-    "description": "Example plugin for MCDR",
+    "name": "Bluemap Helper",
+    "description": "在游戏中管理Bluemap中的坐标点",
     "author": "Fallen_Breath",
     "link": "https://github.com/MCDReforged/MCDReforged-ExamplePlugin",
     "dependencies": {
