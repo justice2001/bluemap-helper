@@ -43,6 +43,7 @@ def del_mark(area, marker_set, marker_id):
     sets.pop(marker_id)
     write_config(config, path)
 
+
 def get_marker_list(area):
     set_list: list[MarkerSet] = []
     path = get_path(area)
